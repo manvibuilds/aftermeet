@@ -3,15 +3,16 @@ import json
 from dotenv import load_dotenv
 from typing import TypedDict
 from langgraph.graph import StateGraph, END
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_groq import ChatGroq
 from prompts import SUMMARY_PROMPT, DECISIONS_PROMPT, ACTION_ITEMS_PROMPT, EMAIL_PROMPT
 
 load_dotenv()
 
 # ─── LLM setup ───────────────────────────────────────────
-llm = ChatGoogleGenerativeAI(
-    model=os.getenv("GEMINI_MODEL", "gemini-2.0-flash"),
-    google_api_key=os.getenv("GEMINI_API_KEY")
+
+llm = ChatGroq(
+    model=os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
+    api_key=os.getenv("GROQ_API_KEY")
 )
 
 # ─── State (the shared whiteboard) ───────────────────────
