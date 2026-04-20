@@ -1,17 +1,31 @@
-AI Meeting Assistant — Complete Architecture Plan
-What We're Building
-User pastes a meeting transcript → AI pipeline extracts action items, key decisions, owners, and drafts a follow-up email → everything displayed in a clean UI → can export as PDF or copy email.
+#  AI Meeting Assistant
 
-Why This Project
+> Paste a meeting transcript → get action items, decisions, owners, and a drafted follow-up email — instantly.
 
-Uses LangGraph (multi-agent) — step up from simple LangChain
-Solves a real business problem every startup has
-Directly relevant to Entelligence.AI (they analyze engineering team work)
-Shows you can build agentic pipelines, not just chatbots
-Deployable in 1-2 weeks
+---
 
+##  What It Does
 
-Complete Flow
+1. User pastes a meeting transcript
+2. A **LangGraph multi-agent pipeline** processes it through 4 specialized nodes
+3. Returns structured output: summary, decisions, action items, and a draft email
+4. Everything displayed in a clean React UI — export as PDF or copy email
+
+---
+
+##  Why This Project
+
+- Uses **LangGraph** (multi-agent) — a step up from simple LangChain
+- Solves a real problem every startup has
+- Directly relevant to companies like **Entelligence.AI** (engineering team analytics)
+- Demonstrates agentic pipelines, not just chatbots
+- Deployable in **1–2 weeks**
+
+---
+
+##  Architecture
+
+```
 User pastes transcript
         ↓
 FastAPI receives it
@@ -35,49 +49,62 @@ LangGraph Pipeline starts
 Structured JSON returned
         ↓
 React Frontend displays everything
+```
 
-Tech Stack
-Backend:
+---
 
-Python + FastAPI
-LangGraph — multi-step agent pipeline
-LangChain Google GenAI — Gemini API as LLM
-Pydantic — data validation
-python-dotenv — env management
-Deployed on Render
+##  Tech Stack
 
-Frontend:
+**Backend**
+- Python + FastAPI
+- LangGraph — multi-step agent pipeline
+- LangChain Google GenAI — Gemini API as LLM
+- Pydantic — data validation
+- python-dotenv — env management
+- Deployed on **Render**
 
-React + Vite
-Tailwind CSS
-Deployed on Vercel
+**Frontend**
+- React + Vite
+- Tailwind CSS
+- Deployed on **Vercel**
 
-No database needed — results are generated on the fly, not stored
+> No database needed — results are generated on the fly, not stored.
 
-File Structure
+---
+
+##  File Structure
+
+```
 ai-meeting-assistant/
 ├── backend/
-│   ├── main.py          ← FastAPI server
-│   ├── graph.py         ← LangGraph pipeline (brain)
-│   ├── prompts.py       ← All 4 prompts
-│   ├── .env             ← API keys
+│   ├── main.py           ← FastAPI server
+│   ├── graph.py          ← LangGraph pipeline (brain)
+│   ├── prompts.py        ← All 4 prompts
+│   ├── .env              ← API keys
 │   └── requirements.txt
 ├── frontend/
 │   ├── src/
-│   │   ├── App.jsx      ← Main UI
-│   │   ├── components/
-│   │   │   ├── TranscriptInput.jsx  ← Paste area
-│   │   │   ├── ResultCard.jsx       ← Show results
-│   │   │   ├── ActionItems.jsx      ← Action items list
-│   │   │   ├── EmailDraft.jsx       ← Email with copy button
-│   │   │   └── LoadingState.jsx     ← Spinner
+│   │   ├── App.jsx               ← Main UI
+│   │   └── components/
+│   │       ├── TranscriptInput.jsx  ← Paste area
+│   │       ├── ResultCard.jsx       ← Show results
+│   │       ├── ActionItems.jsx      ← Action items list
+│   │       ├── EmailDraft.jsx       ← Email with copy button
+│   │       └── LoadingState.jsx     ← Spinner
 │   └── package.json
 └── README.md
+```
 
-Backend — How Each File Works
-prompts.py
+---
+
+## ⚙️ Backend — How Each File Works
+
+### `prompts.py`
+
 Four separate prompts, one for each agent node:
-pythonDECISIONS_PROMPT = """
+
+```python
+DECISIONS_PROMPT = """
 You are an expert at analyzing meeting transcripts.
 Extract all KEY DECISIONS made in this meeting.
 Return as a JSON list: [{"decision": "...", "context": "..."}]
@@ -105,10 +132,12 @@ Summary: {summary}
 Decisions: {decisions}
 Action Items: {action_items}
 """
+```
 
-graph.py — The Brain
-This is the LangGraph multi-agent pipeline:
-python# State object passed between all nodes
+### `graph.py` — The Brain
+
+```python
+# State object passed between all nodes
 class MeetingState(TypedDict):
     transcript: str
     summary: str
@@ -133,9 +162,12 @@ graph.add_node("email", draft_email)
 graph.add_edge("summary", "decisions")
 graph.add_edge("decisions", "action_items")
 graph.add_edge("action_items", "email")
+```
 
-main.py — FastAPI Server
-python@app.post("/analyze")
+### `main.py` — FastAPI Server
+
+```python
+@app.post("/analyze")
 async def analyze_transcript(request: TranscriptRequest):
     result = graph.invoke({"transcript": request.transcript})
     return {
@@ -144,9 +176,13 @@ async def analyze_transcript(request: TranscriptRequest):
         "action_items": result["action_items"],
         "email_draft": result["email_draft"]
     }
+```
 
-Frontend — What User Sees
-Layout — Two column:
+---
+
+##  Frontend UI Layout
+
+```
 Left side:                Right side:
 ┌─────────────────┐      ┌─────────────────────┐
 │ Paste your      │      │ 📋 Summary          │
@@ -159,53 +195,64 @@ Left side:                Right side:
                          │ 📧 Email Draft      │
                          │ [Copy] button       │
                          └─────────────────────┘
+```
 
-API Contract
-Request:
-jsonPOST /analyze
+---
+
+##  API Contract
+
+**Request**
+```json
+POST /analyze
 {
   "transcript": "John: We need to launch by Friday..."
 }
-Response:
-json{
+```
+
+**Response**
+```json
+{
   "summary": "Team discussed product launch timeline...",
   "decisions": [
-    {"decision": "Launch on Friday", "context": "Agreed by all"}
+    { "decision": "Launch on Friday", "context": "Agreed by all" }
   ],
   "action_items": [
-    {"task": "Fix login bug", "owner": "John", "deadline": "Thursday"}
+    { "task": "Fix login bug", "owner": "John", "deadline": "Thursday" }
   ],
   "email_draft": "Hi team, following up on today's meeting..."
 }
+```
 
-Deployment
+---
 
-Backend → Render (same as DSA Debugger)
-Frontend → Vercel (same as DSA Debugger)
-Environment variables:
+##  Deployment
 
-GEMINI_API_KEY
-GEMINI_MODEL=gemini-2.0-flash
+| Service  | Platform | Env Vars |
+|----------|----------|----------|
+| Backend  | Render   | `GEMINI_API_KEY`, `GEMINI_MODEL=gemini-2.0-flash` |
+| Frontend | Vercel   | — |
 
+---
 
+##  Build Order
 
+1. Set up repo + folders
+2. Write `prompts.py`
+3. Write `graph.py` — build and test pipeline
+4. Write `main.py` — expose as API
+5. Test backend locally with Postman
+6. Build React frontend
+7. Deploy both
+8. Write README with architecture diagram
 
-Build Order
+---
 
-Set up repo + folders
-Write prompts.py
-Write graph.py — build and test pipeline
-Write main.py — expose as API
-Test backend locally with Postman
-Build React frontend
-Deploy both
-Write README with architecture diagram
+## What Makes This Impressive
 
-
-What Makes This Impressive
-
-LangGraph — not just one LLM call, a proper stateful pipeline
-Structured JSON output — parsed and rendered cleanly
-Four specialized agents — each expert at one thing
-Real problem — every startup uses this daily
-Fully deployed — live link you can share
+| Feature | Why It Matters |
+|---|---|
+| **LangGraph pipeline** | Not just one LLM call — a proper stateful multi-agent graph |
+| **Structured JSON output** | Parsed cleanly and rendered as rich UI |
+| **4 specialized agents** | Each expert at exactly one thing |
+| **Real-world problem** | Every startup runs meetings and needs follow-ups |
+| **Fully deployed** | Live link you can share with anyone |
