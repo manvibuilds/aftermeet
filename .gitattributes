@@ -1,0 +1,9 @@
+# Exclude JavaScript-related files from language statistics
+*.js linguist-language=ignore
+*.jsx linguist-language=ignore
+*.ts linguist-language=ignore
+*.tsx linguist-language=ignore
+*.json linguist-language=ignore
+*.css linguist-language=ignore
+*.html linguist-language=ignore
+*.config.js linguist-language=ignore
