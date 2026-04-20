@@ -1,0 +1,28 @@
+# Node.js
+node_modules/
+
+# Logs
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Other
+cd
+git
+main
+
+# Ignore JavaScript-related files
+*.js
+*.jsx
+*.ts
+*.tsx
+*.json
+*.css
+*.html
+*.config.js
