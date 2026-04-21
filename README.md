@@ -225,14 +225,6 @@ POST /analyze
 
 ---
 
-##  Deployment
-
-| Service  | Platform | Env Vars |
-|----------|----------|----------|
-| Backend  | Render   | `GEMINI_API_KEY`, `GEMINI_MODEL=gemini-2.0-flash` |
-| Frontend | Vercel   | — |
-
----
 
 ##  Build Order
 
