@@ -1,10 +1,10 @@
-#  AI Meeting Assistant
+# AI Meeting Assistant
 
 > Paste a meeting transcript → get action items, decisions, owners, and a drafted follow-up email — instantly.
 
 ---
 
-##  What It Does
+## What It Does
 
 1. User pastes a meeting transcript
 2. A **LangGraph multi-agent pipeline** processes it through 4 specialized nodes
@@ -13,7 +13,7 @@
 
 ---
 
-##  Why This Project
+## Why This Project
 
 - Uses **LangGraph** (multi-agent) — a step up from simple LangChain
 - Solves a real problem every startup has
@@ -23,7 +23,7 @@
 
 ---
 
-##  Architecture
+## Architecture
 
 ```
 User pastes transcript
@@ -53,26 +53,26 @@ React Frontend displays everything
 
 ---
 
-##  Tech Stack
+## Tech Stack
 
 **Backend**
+
 - Python + FastAPI
 - LangGraph — multi-step agent pipeline
 - LangChain Google GenAI — Gemini API as LLM
 - Pydantic — data validation
 - python-dotenv — env management
-- Deployed on **Render**
 
 **Frontend**
+
 - React + Vite
 - Tailwind CSS
-- Deployed on **Vercel**
 
 > No database needed — results are generated on the fly, not stored.
 
 ---
 
-##  File Structure
+## File Structure
 
 ```
 ai-meeting-assistant/
@@ -180,7 +180,7 @@ async def analyze_transcript(request: TranscriptRequest):
 
 ---
 
-##  Frontend UI Layout
+## Frontend UI Layout
 
 ```
 Left side:                Right side:
@@ -199,34 +199,7 @@ Left side:                Right side:
 
 ---
 
-##  API Contract
-
-**Request**
-```json
-POST /analyze
-{
-  "transcript": "John: We need to launch by Friday..."
-}
-```
-
-**Response**
-```json
-{
-  "summary": "Team discussed product launch timeline...",
-  "decisions": [
-    { "decision": "Launch on Friday", "context": "Agreed by all" }
-  ],
-  "action_items": [
-    { "task": "Fix login bug", "owner": "John", "deadline": "Thursday" }
-  ],
-  "email_draft": "Hi team, following up on today's meeting..."
-}
-```
-
----
-
-
-##  Build Order
+## Build Order
 
 1. Set up repo + folders
 2. Write `prompts.py`
@@ -234,17 +207,14 @@ POST /analyze
 4. Write `main.py` — expose as API
 5. Test backend locally with Postman
 6. Build React frontend
-7. Deploy both
-8. Write README with architecture diagram
 
 ---
 
 ## What Makes This Impressive
 
-| Feature | Why It Matters |
-|---|---|
-| **LangGraph pipeline** | Not just one LLM call — a proper stateful multi-agent graph |
-| **Structured JSON output** | Parsed cleanly and rendered as rich UI |
-| **4 specialized agents** | Each expert at exactly one thing |
-| **Real-world problem** | Every startup runs meetings and needs follow-ups |
-| **Fully deployed** | Live link you can share with anyone |
+| Feature                    | Why It Matters                                              |
+| -------------------------- | ----------------------------------------------------------- |
+| **LangGraph pipeline**     | Not just one LLM call — a proper stateful multi-agent graph |
+| **Structured JSON output** | Parsed cleanly and rendered as rich UI                      |
+| **4 specialized agents**   | Each expert at exactly one thing                            |
+| **Real-world problem**     | Every startup runs meetings and needs follow-ups            |
