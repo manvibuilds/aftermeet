@@ -1,6 +1,6 @@
 # AI Meeting Assistant
 
-> Paste a meeting transcript → get action items, decisions, owners, and a drafted follow-up email — instantly.
+> Paste a meeting transcript → get action items, decisions, owners, and a drafted follow-up email instantly.
 
 ---
 
